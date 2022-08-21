@@ -31,18 +31,7 @@ func (hl *RoleHandler) Index(c echo.Context) error {
 	ctx := c.Request().Context()
 	roles, _ := hl.Usecase.Fetch(ctx)
 
-	rolesDto := []RoleResponse{}
-	for _, role := range roles {
-		rolesDto = append(rolesDto, RoleResponse{
-			ID:        role.ID,
-			Name:      role.Name,
-			Slug:      role.Slug,
-			CreatedAt: role.CreatedAt,
-			UpdatedAt: role.UpdatedAt,
-		})
-	}
-
-	return c.JSON(http.StatusOK, rolesDto)
+	return c.JSON(http.StatusOK, ConvertRolesToRolesResponse(roles))
 }
 
 // Show will Find data
@@ -57,13 +46,7 @@ func (hl *RoleHandler) Show(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, &ErrorResponse{Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, RoleResponse{
-		ID:        role.ID,
-		Name:      role.Name,
-		Slug:      role.Slug,
-		CreatedAt: role.CreatedAt,
-		UpdatedAt: role.UpdatedAt,
-	})
+	return c.JSON(http.StatusOK, ConvertRoleToRoleResponse(role))
 }
 
 // Store will create data

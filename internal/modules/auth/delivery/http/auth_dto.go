@@ -1,6 +1,7 @@
 package http
 
 import (
+	"go-app/internal/domain"
 	"time"
 )
 
@@ -32,4 +33,30 @@ type UserRegisterResponse struct {
 // ErrorResponse is struc when error
 type ErrorResponse struct {
 	Message string `json:"message"`
+}
+
+// ConvertUserToUserLoginResponse DTO
+func ConvertUserToUserLoginResponse(claims domain.Claims, tokenStr string) UserLoginResponse {
+	return UserLoginResponse{
+		ID:     claims.ID,
+		Name:   claims.Name,
+		Email:  claims.Email,
+		RoleID: claims.RoleID,
+		Auth: AuthResponse{
+			AccessToken: tokenStr,
+			ExpiresAt:   claims.ExpiresAt,
+		},
+	}
+}
+
+// ConvertUserToUserRegisterResponse DTO
+func ConvertUserToUserRegisterResponse(user domain.User) UserRegisterResponse {
+	return UserRegisterResponse{
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		RoleID:    user.RoleID,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}
 }

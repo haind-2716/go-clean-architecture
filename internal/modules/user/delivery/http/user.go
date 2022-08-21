@@ -31,19 +31,7 @@ func (hl *UserHandler) Index(c echo.Context) error {
 	ctx := c.Request().Context()
 	users, _ := hl.Usecase.Fetch(ctx)
 
-	usersDto := []UserResponse{}
-	for _, user := range users {
-		usersDto = append(usersDto, UserResponse{
-			ID:        user.ID,
-			Name:      user.Name,
-			Email:     user.Email,
-			RoleID:    user.RoleID,
-			CreatedAt: user.CreatedAt,
-			UpdatedAt: user.UpdatedAt,
-		})
-	}
-
-	return c.JSON(http.StatusOK, usersDto)
+	return c.JSON(http.StatusOK, ConvertUsersToUsersResponse(users))
 }
 
 // Show will Find data
@@ -58,14 +46,7 @@ func (hl *UserHandler) Show(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, &ErrorResponse{Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, UserResponse{
-		ID:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		RoleID:    user.RoleID,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-	})
+	return c.JSON(http.StatusOK, ConvertUserToUserResponse(user))
 }
 
 // Store will create data

@@ -35,16 +35,7 @@ func (hl *AuthHandler) Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, &ErrorResponse{Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, UserLoginResponse{
-		ID:     claims.ID,
-		Name:   claims.Name,
-		Email:  claims.Email,
-		RoleID: claims.RoleID,
-		Auth: AuthResponse{
-			AccessToken: tokenStr,
-			ExpiresAt:   claims.StandardClaims.ExpiresAt,
-		},
-	})
+	return c.JSON(http.StatusOK, ConvertUserToUserLoginResponse(*claims, tokenStr))
 }
 
 // Register for user
@@ -60,12 +51,5 @@ func (hl *AuthHandler) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, &ErrorResponse{Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusCreated, UserRegisterResponse{
-		ID:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		RoleID:    user.RoleID,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-	})
+	return c.JSON(http.StatusCreated, ConvertUserToUserRegisterResponse(*user))
 }
